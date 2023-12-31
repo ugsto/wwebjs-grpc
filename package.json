@@ -1,7 +1,7 @@
 {
 	"name": "wwebjs-grpc",
 	"version": "0.0.1",
-	"description": "WhatsApp Web JS as a language-server agnostic gRPC server, facilitating integration across arious platforms and languages",
+	"description": "WhatsApp Web JS as a language agnostic gRPC server, facilitating integration across various platforms and languages",
 	"main": "index.ts",
 	"type": "module",
 	"scripts": {
