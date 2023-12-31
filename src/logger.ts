@@ -56,7 +56,35 @@ export class Logger {
 		});
 	}
 
-	log(level: LogLevel, message: string | Record<string, unknown>, meta?: any) {
-		this.logger.log(level, message as unknown as string, meta);
+	emerg(message: string | Record<string, unknown>, meta?: any) {
+		this.logger.log('emerg', message as unknown as string, meta);
+	}
+
+	alert(message: string | Record<string, unknown>, meta?: any) {
+		this.logger.log('alert', message as unknown as string, meta);
+	}
+
+	crit(message: string | Record<string, unknown>, meta?: any) {
+		this.logger.log('crit', message as unknown as string, meta);
+	}
+
+	err(message: string | Record<string, unknown>, meta?: any) {
+		this.logger.log('err', message as unknown as string, meta);
+	}
+
+	warning(message: string | Record<string, unknown>, meta?: any) {
+		this.logger.log('warning', message as unknown as string, meta);
+	}
+
+	notice(message: string | Record<string, unknown>, meta?: any) {
+		this.logger.log('notice', message as unknown as string, meta);
+	}
+
+	info(message: string | Record<string, unknown>, meta?: any) {
+		this.logger.log('info', message as unknown as string, meta);
+	}
+
+	debug(message: string | Record<string, unknown>, meta?: any) {
+		this.logger.log('debug', message as unknown as string, meta);
 	}
 }
