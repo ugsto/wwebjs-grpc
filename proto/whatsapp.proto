@@ -1,0 +1,523 @@
+syntax = "proto3";
+
+package wwebjs;
+
+import "google/protobuf/duration.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+message Wid {
+  string server = 1;
+  string user = 2;
+}
+
+message MessageId {
+  bool from_me = 1;
+  Wid remote = 2;
+  string id = 3;
+}
+
+message MessageMedia {
+  string data = 1;
+  optional string filename = 2;
+  optional uint64 filesize = 3;
+  string mimetype = 4;
+}
+
+enum MessageAck {
+  MESSAGE_ACK_UNSPECIFIED = 0;
+  MESSAGE_ACK_ERROR = 1;
+  MESSAGE_ACK_PENDING = 2;
+  MESSAGE_ACK_SERVER = 3;
+  MESSAGE_ACK_DEVICE = 4;
+  MESSAGE_ACK_READ = 5;
+  MESSAGE_ACK_PLAYED = 6;
+}
+
+enum MessageType {
+  MESSAGE_TYPE_UNSPECIFIED = 0;
+  MESSAGE_TYPE_TEXT = 1;
+  MESSAGE_TYPE_AUDIO = 2;
+  MESSAGE_TYPE_VOICE = 3;
+  MESSAGE_TYPE_IMAGE = 4;
+  MESSAGE_TYPE_VIDEO = 5;
+  MESSAGE_TYPE_DOCUMENT = 6;
+  MESSAGE_TYPE_STICKER = 7;
+  MESSAGE_TYPE_LOCATION = 8;
+  MESSAGE_TYPE_CONTACT_CARD = 9;
+  MESSAGE_TYPE_CONTACT_CARD_MULTI = 10;
+  MESSAGE_TYPE_ORDER = 11;
+  MESSAGE_TYPE_REVOKED = 12;
+  MESSAGE_TYPE_PRODUCT = 13;
+  MESSAGE_TYPE_UNKNOWN = 14;
+  MESSAGE_TYPE_GROUP_INVITE = 15;
+  MESSAGE_TYPE_LIST = 16;
+  MESSAGE_TYPE_LIST_RESPONSE = 17;
+  MESSAGE_TYPE_BUTTONS_RESPONSE = 18;
+  MESSAGE_TYPE_PAYMENT = 19;
+  MESSAGE_TYPE_BROADCAST_NOTIFICATION = 20;
+  MESSAGE_TYPE_CALL_LOG = 21;
+  MESSAGE_TYPE_CIPHERTEXT = 22;
+  MESSAGE_TYPE_DEBUG = 23;
+  MESSAGE_TYPE_E2E_NOTIFICATION = 24;
+  MESSAGE_TYPE_GP2 = 25;
+  MESSAGE_TYPE_GROUP_NOTIFICATION = 26;
+  MESSAGE_TYPE_HSM = 27;
+  MESSAGE_TYPE_INTERACTIVE = 28;
+  MESSAGE_TYPE_NATIVE_FLOW = 29;
+  MESSAGE_TYPE_NOTIFICATION = 30;
+  MESSAGE_TYPE_NOTIFICATION_TEMPLATE = 31;
+  MESSAGE_TYPE_OVERSIZED = 32;
+  MESSAGE_TYPE_PROTOCOL = 33;
+  MESSAGE_TYPE_REACTION = 34;
+  MESSAGE_TYPE_TEMPLATE_BUTTON_REPLY = 35;
+  MESSAGE_TYPE_POLL_CREATION = 36;
+}
+
+message Location {
+  optional string address = 1;
+  optional string description = 2;
+  float latitude = 3;
+  float longitude = 4;
+  optional string name = 5;
+  optional string url = 6;
+}
+
+message Message {
+  message Link {
+    string link = 1;
+    bool is_suspicious = 2;
+  }
+
+  MessageAck ack = 1;
+  optional Wid author = 2;
+  string body = 3;
+  bool broadcast = 4;
+  string device_type = 5;
+  string duration = 6;
+  uint32 forwarding_score = 7;
+  Wid from = 8;
+  bool from_me = 9;
+  bool has_media = 10;
+  bool has_quoted_message = 11;
+  MessageId id = 12;
+  optional InviteV4 invite_v4 = 13;
+  bool is_ephemeral = 14;
+  bool is_forwarded = 15;
+  bool is_gif = 16;
+  bool is_status = 17;
+  repeated Link links = 18;
+  Location location = 19;
+  optional string media_key = 20;
+  repeated Wid mentioned_ids = 21;
+  string order_id = 22;
+  google.protobuf.Timestamp timestamp = 23;
+  Wid to = 24;
+  string token = 25;
+  MessageType type = 26;
+  repeated string v_cards = 27;
+}
+
+message Contact {
+  Wid id = 1;
+  bool is_blocked = 2;
+  bool is_business = 3;
+  bool is_enterprise = 4;
+  bool is_group = 5;
+  bool is_me = 6;
+  bool is_my_contact = 7;
+  bool is_user = 8;
+  bool is_wa_contact = 9;
+  optional string name = 10;
+  string number = 11;
+  string pushname = 12;
+  optional string short_name = 13;
+}
+
+message Chat {
+  bool archived = 1;
+  Wid id = 2;
+  bool is_group = 3;
+  bool is_muted = 4;
+  bool is_read_only = 5;
+  Message last_message = 6;
+  google.protobuf.Duration mute_expiration = 7;
+  string name = 8;
+  bool pinned = 9;
+  google.protobuf.Timestamp timestamp = 10;
+  uint32 unread_count = 11;
+}
+
+message Label {
+  string hex_color = 1;
+  string id = 2;
+  string name = 3;
+}
+
+message ClientInfo {
+  Wid wid = 1;
+  string platform = 2;
+  string pushname = 3;
+}
+
+message InviteV4 {
+  string invite_code = 1;
+  google.protobuf.Timestamp invite_code_exp = 2;
+  Wid group_id = 3;
+  optional string group_name = 4;
+  Wid from_id = 5;
+  Wid to_id = 6;
+}
+
+message GetInfoResponse {
+  ClientInfo client_info = 1;
+}
+
+message CreateGroupResult {
+  message Participant {
+    int32 status_code = 1;
+    string message = 2;
+    bool is_group_creator = 3;
+    bool is_invite_v4_sent = 4;
+  }
+
+  string title = 1;
+  Wid gid = 2;
+  map<string, Participant> participants = 3;
+}
+
+message MembershipRequestActionOptions {
+  repeated Wid requester_ids = 1;
+  google.protobuf.Duration sleep = 2;
+}
+
+message MembershipRequestActionResult {
+  Wid requester_id = 1;
+  optional int32 error = 2;
+  string message = 3;
+}
+
+message AcceptInviteRequest {
+  string invite_code = 1;
+}
+
+message AcceptInviteResponse {
+  Wid chat_id = 1;
+}
+
+message AcceptGroupV4InviteResponse {
+  int32 status = 1;
+}
+
+message GetInviteInfoRequest {
+  string invite_code = 1;
+}
+
+message GetInviteInfoResponse {
+  InviteV4 invite_v4 = 1;
+}
+
+message ArchiveChatRequest {
+  Wid chat_id = 1;
+}
+
+message PinChatRequest {
+  Wid chat_id = 1;
+}
+
+message UnpinChatRequest {
+  Wid chat_id = 1;
+}
+
+message CreateGroupRequest {
+  message Options {
+    optional google.protobuf.Duration message_timer = 1;
+    optional Wid parent_group_id = 2;
+    optional bool auto_send_invite_v4 = 3;
+    optional string comment = 4;
+  }
+
+  string title = 1;
+  repeated Wid participant_ids = 2;
+  optional Options options = 3;
+}
+
+message CreateGroupResponse {
+  CreateGroupResult result = 1;
+}
+
+message GetBlockedContactsResponse {
+  repeated Contact contacts = 1;
+}
+
+message GetChatByIdRequest {
+  Wid chat_id = 1;
+}
+
+message GetChatByIdResponse {
+  Chat chat = 1;
+}
+
+message GetChatsResponse {
+  repeated Chat chats = 1;
+}
+
+message GetContactByIdRequest {
+  Wid contact_id = 1;
+}
+
+message GetContactByIdResponse {
+  Contact contact = 1;
+}
+
+message GetMessageByIdRequest {
+  MessageId message_id = 1;
+}
+
+message GetMessageByIdResponse {
+  Message message = 1;
+}
+
+message GetContactsResponse {
+  repeated Contact contacts = 1;
+}
+
+message GetCountryCodeRequest {
+  MessageId message_id = 1;
+}
+
+message GetCountryCodeResponse {
+  string country_code = 1;
+}
+
+message GetFormattedNumberRequest {
+  MessageId message_id = 1;
+}
+
+message GetFormattedNumberResponse {
+  string formatted_number = 1;
+}
+
+message GetLabelsResponse {
+  repeated Label labels = 1;
+}
+
+message AddOrRemoveLabelsRequest {
+  repeated string label_ids = 1;
+  repeated Wid chat_ids = 2;
+}
+
+message GetLabelByIdRequest {
+  string label_id = 1;
+}
+
+message GetLabelByIdResponse {
+  Label label = 1;
+}
+
+message GetChatLabelsRequest {
+  Wid chat_id = 1;
+}
+
+message GetChatLabelsResponse {
+  repeated Label labels = 1;
+}
+
+message GetChatsByLabelIdRequest {
+  string label_id = 1;
+}
+
+message GetChatsByLabelIdResponse {
+  repeated Chat chats = 1;
+}
+
+message GetProfilePicUrlRequest {
+  Wid contact_id = 1;
+}
+
+message GetProfilePicUrlResponse {
+  string profile_pic_url = 1;
+}
+
+message GetCommonGroupsRequest {
+  Wid contact_id = 1;
+}
+
+message GetCommonGroupsResponse {
+  repeated Chat chats = 1;
+}
+
+message IsRegisteredUserRequest {
+  Wid contact_id = 1;
+}
+
+message IsRegisteredUserResponse {
+  bool is_registered = 1;
+}
+
+message MuteChatRequest {
+  Wid chat_id = 1;
+}
+
+message SendMessageRequest {
+  message Options {
+    optional bool link_preview = 1;
+    optional bool send_audio_as_voice = 2;
+    optional bool send_video_as_gif = 3;
+    optional bool send_media_as_sticker = 4;
+    optional bool send_media_as_document = 5;
+    optional bool is_view_once = 6;
+    optional bool parse_vcards = 7;
+    optional string caption = 8;
+    optional MessageId quoted_message_id = 9;
+    repeated Contact mentions = 10;
+    optional bool send_seen = 11;
+    optional string sticker_author = 12;
+    optional string sticker_name = 13;
+    repeated string sticker_categories = 14;
+    optional MessageMedia media = 15;
+  }
+
+  Wid chat_id = 1;
+  string content = 2;
+  optional Options options = 3;
+}
+
+message SendMessageResponse {
+  Message message = 1;
+}
+
+message SearchMessagesRequest {
+  message Options {
+    optional uint32 page = 1;
+    optional uint32 limit = 2;
+    optional Wid chat_id = 3;
+  }
+
+  string query = 1;
+  optional Options options = 2;
+}
+
+message SearchMessagesResponse {
+  repeated Message messages = 1;
+}
+
+message SendSeenRequest {
+  Wid chat_id = 1;
+}
+
+message MarkChatUnreadRequest {
+  Wid chat_id = 1;
+}
+
+message SetStatusRequest {
+  string status = 1;
+}
+
+message SetDisplayNameRequest {
+  string display_name = 1;
+}
+
+message UnarchiveChatRequest {
+  Wid chat_id = 1;
+}
+
+message UnmuteChatRequest {
+  Wid chat_id = 1;
+}
+
+message SetProfilePictureRequest {
+  MessageMedia media = 1;
+}
+
+message GetGroupMembershipRequestsRequest {
+  Wid chat_id = 1;
+}
+
+message GetGroupMembershipRequestsResponse {
+  message GroupMembershipRequest {
+    Wid id = 1;
+    Wid added_by = 2;
+    optional Wid parent_group_id = 3;
+    string request_method = 4;
+    optional google.protobuf.Timestamp t = 5;
+  }
+
+  repeated GroupMembershipRequest requests = 1;
+}
+
+message ApproveGroupMembershipRequestsRequest {
+  Wid chat_id = 1;
+  MembershipRequestActionOptions options = 2;
+}
+
+message ApproveGroupMembershipRequestsResponse {
+  repeated MembershipRequestActionResult results = 1;
+}
+
+message RejectGroupMembershipRequestsRequest {
+  Wid chat_id = 1;
+  MembershipRequestActionOptions options = 2;
+}
+
+message RejectGroupMembershipRequestsResponse {
+  repeated MembershipRequestActionResult results = 1;
+}
+
+service Whatsapp {
+  rpc GetInfo(google.protobuf.Empty) returns (GetInfoResponse) {}
+  rpc AcceptInvite(AcceptInviteRequest) returns (AcceptInviteResponse) {}
+  rpc AcceptGroupV4Invite(google.protobuf.Empty)
+      returns (AcceptGroupV4InviteResponse) {}
+  rpc GetInviteInfo(GetInviteInfoRequest) returns (GetInviteInfoResponse) {}
+  rpc ArchiveChat(ArchiveChatRequest) returns (google.protobuf.Empty) {}
+  rpc PinChat(PinChatRequest) returns (google.protobuf.Empty) {}
+  rpc UnpinChat(UnpinChatRequest) returns (google.protobuf.Empty) {}
+  rpc CreateGroup(CreateGroupRequest) returns (CreateGroupResponse) {}
+  rpc GetBlockedContacts(google.protobuf.Empty)
+      returns (GetBlockedContactsResponse) {}
+  rpc GetChatById(GetChatByIdRequest) returns (GetChatByIdResponse) {}
+  rpc GetChats(google.protobuf.Empty) returns (GetChatsResponse) {}
+  rpc GetContactById(GetContactByIdRequest) returns (GetContactByIdResponse) {}
+  rpc GetMessageById(GetMessageByIdRequest) returns (GetMessageByIdResponse) {}
+  rpc GetContacts(google.protobuf.Empty) returns (GetContactsResponse) {}
+  rpc GetCountryCode(GetCountryCodeRequest) returns (GetCountryCodeResponse) {}
+  rpc GetFormattedNumber(GetFormattedNumberRequest)
+      returns (GetFormattedNumberResponse) {}
+  rpc GetLabels(google.protobuf.Empty) returns (GetLabelsResponse) {}
+  rpc AddOrRemoveLabels(AddOrRemoveLabelsRequest)
+      returns (google.protobuf.Empty) {}
+  rpc GetLabelById(GetLabelByIdRequest) returns (GetLabelByIdResponse) {}
+  rpc GetChatLabels(GetChatLabelsRequest) returns (GetChatLabelsResponse) {}
+  rpc GetChatsByLabelId(GetChatsByLabelIdRequest)
+      returns (GetChatsByLabelIdResponse) {}
+  rpc GetProfilePicUrl(GetProfilePicUrlRequest)
+      returns (GetProfilePicUrlResponse) {}
+  rpc GetCommonGroups(GetCommonGroupsRequest)
+      returns (GetCommonGroupsResponse) {}
+  rpc IsRegisteredUser(IsRegisteredUserRequest)
+      returns (IsRegisteredUserResponse) {}
+  rpc MuteChat(MuteChatRequest) returns (google.protobuf.Empty) {}
+  rpc SendMessage(SendMessageRequest) returns (SendMessageResponse) {}
+  rpc SearchMessages(SearchMessagesRequest) returns (SearchMessagesResponse) {}
+  rpc SendPresenceAvailable(google.protobuf.Empty)
+      returns (google.protobuf.Empty) {}
+  rpc SendPresenceUnavailable(google.protobuf.Empty)
+      returns (google.protobuf.Empty) {}
+  rpc SendSeen(SendSeenRequest) returns (google.protobuf.Empty) {}
+  rpc MarkChatUnread(MarkChatUnreadRequest) returns (google.protobuf.Empty) {}
+  rpc SetStatus(SetStatusRequest) returns (google.protobuf.Empty) {}
+  rpc SetDisplayName(SetDisplayNameRequest) returns (google.protobuf.Empty) {}
+  rpc UnarchiveChat(UnarchiveChatRequest) returns (google.protobuf.Empty) {}
+  rpc UnmuteChat(UnmuteChatRequest) returns (google.protobuf.Empty) {}
+  rpc SetProfilePicture(SetProfilePictureRequest)
+      returns (google.protobuf.Empty) {}
+  rpc DeleteProfilePicture(google.protobuf.Empty)
+      returns (google.protobuf.Empty) {}
+  rpc GetGroupMembershipRequests(GetGroupMembershipRequestsRequest)
+      returns (GetGroupMembershipRequestsResponse) {}
+  rpc ApproveGroupMembershipRequests(ApproveGroupMembershipRequestsRequest)
+      returns (ApproveGroupMembershipRequestsResponse) {}
+  rpc RejectGroupMembershipRequests(RejectGroupMembershipRequestsRequest)
+      returns (RejectGroupMembershipRequestsResponse) {}
+}

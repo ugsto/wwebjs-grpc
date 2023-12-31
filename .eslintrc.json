@@ -3,7 +3,11 @@
 		"browser": true,
 		"es2021": true
 	},
-	"extends": "xo",
+	"extends": [
+		"xo",
+		"plugin:vitest/recommended",
+		"prettier"
+	],
 	"overrides": [
 		{
 			"extends": [
@@ -14,6 +18,14 @@
 			"files": [
 				"*.ts",
 				"*.tsx"
+			]
+		},
+		{
+			"parserOptions": {
+				"project": "tsconfig.scripts.json"
+			},
+			"files": [
+				"scripts/*.ts"
 			]
 		}
 	],
