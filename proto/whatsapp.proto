@@ -205,6 +205,10 @@ message AcceptInviteResponse {
   Wid chat_id = 1;
 }
 
+message AcceptGroupV4InviteRequest {
+	InviteV4 invite = 1;
+}
+
 message AcceptGroupV4InviteResponse {
   int32 status = 1;
 }
@@ -467,7 +471,7 @@ message RejectGroupMembershipRequestsResponse {
 service Whatsapp {
   rpc GetInfo(google.protobuf.Empty) returns (GetInfoResponse) {}
   rpc AcceptInvite(AcceptInviteRequest) returns (AcceptInviteResponse) {}
-  rpc AcceptGroupV4Invite(google.protobuf.Empty)
+  rpc AcceptGroupV4Invite(AcceptGroupV4InviteRequest)
       returns (AcceptGroupV4InviteResponse) {}
   rpc GetInviteInfo(GetInviteInfoRequest) returns (GetInviteInfoResponse) {}
   rpc ArchiveChat(ArchiveChatRequest) returns (google.protobuf.Empty) {}

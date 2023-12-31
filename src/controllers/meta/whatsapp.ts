@@ -468,6 +468,10 @@ export interface AcceptInviteResponse {
   chatId: Wid | undefined;
 }
 
+export interface AcceptGroupV4InviteRequest {
+  invite: InviteV4 | undefined;
+}
+
 export interface AcceptGroupV4InviteResponse {
   status: number;
 }
@@ -3122,6 +3126,65 @@ export const AcceptInviteResponse = {
     const message = createBaseAcceptInviteResponse();
     message.chatId = (object.chatId !== undefined && object.chatId !== null)
       ? Wid.fromPartial(object.chatId)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseAcceptGroupV4InviteRequest(): AcceptGroupV4InviteRequest {
+  return { invite: undefined };
+}
+
+export const AcceptGroupV4InviteRequest = {
+  encode(message: AcceptGroupV4InviteRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.invite !== undefined) {
+      InviteV4.encode(message.invite, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AcceptGroupV4InviteRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAcceptGroupV4InviteRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.invite = InviteV4.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AcceptGroupV4InviteRequest {
+    return { invite: isSet(object.invite) ? InviteV4.fromJSON(object.invite) : undefined };
+  },
+
+  toJSON(message: AcceptGroupV4InviteRequest): unknown {
+    const obj: any = {};
+    if (message.invite !== undefined) {
+      obj.invite = InviteV4.toJSON(message.invite);
+    }
+    return obj;
+  },
+
+  create(base?: DeepPartial<AcceptGroupV4InviteRequest>): AcceptGroupV4InviteRequest {
+    return AcceptGroupV4InviteRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<AcceptGroupV4InviteRequest>): AcceptGroupV4InviteRequest {
+    const message = createBaseAcceptGroupV4InviteRequest();
+    message.invite = (object.invite !== undefined && object.invite !== null)
+      ? InviteV4.fromPartial(object.invite)
       : undefined;
     return message;
   },
@@ -7012,7 +7075,7 @@ export const WhatsappDefinition = {
     },
     acceptGroupV4Invite: {
       name: "AcceptGroupV4Invite",
-      requestType: Empty,
+      requestType: AcceptGroupV4InviteRequest,
       requestStream: false,
       responseType: AcceptGroupV4InviteResponse,
       responseStream: false,
@@ -7324,7 +7387,7 @@ export interface WhatsappServiceImplementation<CallContextExt = {}> {
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<AcceptInviteResponse>>;
   acceptGroupV4Invite(
-    request: Empty,
+    request: AcceptGroupV4InviteRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<AcceptGroupV4InviteResponse>>;
   getInviteInfo(
@@ -7436,7 +7499,7 @@ export interface WhatsappClient<CallOptionsExt = {}> {
     options?: CallOptions & CallOptionsExt,
   ): Promise<AcceptInviteResponse>;
   acceptGroupV4Invite(
-    request: DeepPartial<Empty>,
+    request: DeepPartial<AcceptGroupV4InviteRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<AcceptGroupV4InviteResponse>;
   getInviteInfo(
